@@ -1,0 +1,61 @@
+﻿#content {
+	font-family: "Lucida Console", Monaco, monospace;
+	width: 50em;
+	height: 32.5em;
+	color: #73ad21;
+	background-color: #5f5f5f;
+	overflow: auto;
+	margin-left: auto;
+	margin-right: auto;
+	letter-spacing: 0px;
+	padding: 0.5em;
+	line-height: 1.3em;
+	word-wrap: break-word;
+}
+
+#warning {
+	margin-left: auto;
+	margin-right: auto;
+	font-family: "Lucida Console", Monaco, monospace;
+	width: 50em;
+	color: #801515;
+	text-align: center;
+}
+
+#stdin_form {
+	margin-top: -10px;
+	margin-left: auto;
+	margin-right: auto;
+	width: 50em;
+	font-family: sans-serif;
+	text-align: center;
+}
+
+	#stdin_form input {
+		font-size: 12pt;
+	}
+
+	#stdin_form input[type=text] {
+		width: 42em;
+	}
+
+#info {
+	font-family: "Lucida Console", Monaco, monospace;
+	text-align: right;
+    margin: 20px;
+}
+
+h1 {
+	background: #4c0762;
+	color: #f2f2f2;
+	text-align: center;
+	padding: 10px;
+	font-size: 30pt;
+	font-family: sans-serif;
+	margin: 0;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+}
