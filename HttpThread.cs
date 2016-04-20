@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Reflection;
+using System.Windows.Forms;
 
 namespace HTTPconsole
 {
@@ -19,8 +20,7 @@ namespace HTTPconsole
 		{
 			if (!HttpListener.IsSupported)
 			{
-				Console.WriteLine("HTTPListener is not supported on this platform!");
-				Console.WriteLine("Press any key to exit...");
+				MessageBox.Show("Error","HTTPListener is not supported on this platform!",MessageBoxButtons.OK,MessageBoxIcon.Error);
 				Environment.Exit(1);
 			}
 
@@ -33,16 +33,20 @@ namespace HTTPconsole
             }
             catch (Exception e)
             {
-                Console.WriteLine("Došlo k chybě při pokusu o zapnutí HTTP serveru.");
-                if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-                {
-                    string username = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-                    Console.WriteLine("K této chybě často dochází pod systémy Windows kvůli jejich");
-                    Console.WriteLine("zásadám zabezpečení přístupu k službám protokolu HTTP.");
-                    Console.WriteLine("Pro nápravu spusťte (jako administrátor) následující příkaz:");
-                    Console.WriteLine("netsh http add urlacl url={0} user={1}", prefix,username);
-                }
-                Console.WriteLine("Chybová zpráva: " + e.Message);
+				if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+				{
+					string username = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+					MessageBox.Show("Error", "An error has occured when attempting to launch the HTTP server.\r\n" +
+					"This often occurs on Windows operating systems because of their HTTP service security policies.\r\n" +
+					"To fix this, run the following command (as administrator):\r\n" +
+					"netsh http add urlacl url=" + prefix + " user=" + username, MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
+				else
+				{
+					MessageBox.Show("Error", "An error has occured when attempting to launch the HTTP server.\r\n" +
+					"Exception: " + e.Message);
+				}
+				Environment.Exit(1);
             }
 
 			while (true)
