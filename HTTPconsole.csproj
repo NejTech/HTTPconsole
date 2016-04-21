@@ -42,8 +42,9 @@
     <Compile Include="ProgramThread.cs" />
     <Compile Include="UserConsoleThread.cs" />
     <Compile Include="UserInputThread.cs" />
+    <Compile Include="UIThread.cs" />
     <Compile Include="UIForm.cs" />
-    <Compile Include="CommandForm.cs" />
+    <Compile Include="PathDialogForm.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

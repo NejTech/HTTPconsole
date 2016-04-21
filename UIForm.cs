@@ -7,17 +7,36 @@ namespace HTTPconsole
 {
 	public class UIForm : Form
 	{
+		private string _command;
+		private string _args;
+		private TextBox inputBox;
+		private ProgramThread pt;
+
+		public static UIForm Instance = null;
+		// Mono doesn't want to allow me to pass refrerence to this form to the PathDialogForm
+		// through .ShowDialog and .Owner, so at the moment I have to use this ugly hack.
+
 		public UIForm(string command, string args)
 		{
-			ProgramThread pt = new ProgramThread(command, args);
-			Thread program = new Thread(new ThreadStart(pt.ThreadRun));
-			program.Start();
+			UIForm.Instance = this;
+			_args = args;
 
-			HttpThread ht = new HttpThread(49900, pt);
-			Thread http = new Thread(new ThreadStart(ht.ThreadRun));
-			http.Start();
+			if (command == "")
+			{
+				using (PathDialogForm pdf = new PathDialogForm())
+				{
+					if (pdf.ShowDialog() == DialogResult.Cancel)
+					{
+						Environment.Exit(0);
+					}
+				}
+			}
+			else
+			{
+				_command = command;
+			}
 
-			Text = "HTTPconsole v0.3";
+			Text = _command + " " + _args;
 			Size = new Size(800, 600);
 
 			//this.FormBorderStyle = FormBorderStyle.None;
@@ -32,16 +51,6 @@ namespace HTTPconsole
 			titleLabel.Font = new Font("Segoe UI", 32.0f);
 			titleLabel.TextAlign = ContentAlignment.MiddleCenter;
 			titleLabel.Parent = this;
-
-			/*
-			Label infoLabel = new Label();
-			infoLabel.Text = Environment.OSVersion.VersionString;
-			infoLabel.Width = 200;
-			infoLabel.Height = 20;
-			infoLabel.Location = new Point(10, 550);
-			infoLabel.TextAlign = ContentAlignment.MiddleLeft;
-			infoLabel.Parent = this;
-			*/
 
 			TextBox consoleBox = new TextBox();
 			consoleBox.BackColor = Color.FromArgb(0x5f, 0x5f, 0x5f);
@@ -62,7 +71,7 @@ namespace HTTPconsole
 			inputBoxLabel.Font = new Font(inputBoxLabel.Font.FontFamily, 11.0f);
 			inputBoxLabel.Parent = this;
 
-			TextBox inputBox = new TextBox();
+			inputBox = new TextBox();
 			inputBox.Width = 600;
 			inputBox.Font = new Font("Monaco", 10.0f);
 			inputBox.Location = new Point(80, 490);
@@ -74,11 +83,36 @@ namespace HTTPconsole
 			inputButton.Width = 70;
 			inputButton.Location = new Point(688, 490);
 			inputButton.Font = new Font(inputButton.Font.FontFamily, 11.0f);
+			inputButton.Click += InputButton_Click;
 			inputButton.Parent = this;
 
 			StatusBar sb = new StatusBar();
 			sb.Text = Environment.OSVersion.VersionString;
 			sb.Parent = this;
+
+			pt = new ProgramThread(_command, _args);
+			Thread program = new Thread(new ThreadStart(pt.ThreadRun));
+			program.Start();
+
+			HttpThread ht = new HttpThread(49900, pt);
+			Thread http = new Thread(new ThreadStart(ht.ThreadRun));
+			http.Start();
+
+			UIThread uit = new UIThread(pt, consoleBox, sb);
+			Thread ui = new Thread(new ThreadStart(uit.ThreadRun));
+			ui.Start();
+		}
+
+		void InputButton_Click (object sender, EventArgs e)
+		{
+			pt.stdinBuffer.Enqueue(inputBox.Text);
+			inputBox.Text = "";
+		}
+
+		public void PathDialogCallback(string command, string args)
+		{
+			_command = command;
+			_args = args;
 		}
 	}
 }

@@ -57,32 +57,13 @@ namespace HTTPconsole
 
 		public ProgramThread(string filename, string args)
 		{
-			if (filename == "")
-			{
-				using (CommandForm cf = new CommandForm()) //!!! FIXME Move to UIForm and get WinForms code out of here
-				{
-					if (cf.ShowDialog() == DialogResult.Cancel)
-					{
-						Environment.Exit(0);
-					}
-				}
-			}
-			else
-			{
-				_filename = filename;
-				_args = args;
-			}
-
 			stdoutBuffer = new List<string>();
 			stderrBuffer = new List<string>();
 			stdinBuffer = new Queue<string>();
 
-		}
-
-		public void CommandFormReportBack(string filename, string args)
-		{
 			_filename = filename;
 			_args = args;
+
 		}
 	}
 }
