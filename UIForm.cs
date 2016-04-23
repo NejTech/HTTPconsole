@@ -10,16 +10,15 @@ namespace HTTPconsole
 		private string _command;
 		private string _args;
 		private TextBox inputBox;
+		private TextBox consoleBox;
 		private ProgramThread pt;
 
-		public static UIForm Instance = null;
-		// Mono doesn't want to allow me to pass refrerence to this form to the PathDialogForm
-		// through .ShowDialog and .Owner, so at the moment I have to use this ugly hack.
+		public static UIForm Instance;
 
 		public UIForm(string command, string args)
 		{
-			UIForm.Instance = this;
 			_args = args;
+			Instance = this;
 
 			if (command == "")
 			{
@@ -39,8 +38,6 @@ namespace HTTPconsole
 			Text = _command + " " + _args;
 			Size = new Size(800, 600);
 
-			//this.FormBorderStyle = FormBorderStyle.None;
-
 			Label titleLabel = new Label();
 			titleLabel.Text = "HTTPconsole";
 			titleLabel.Width = this.Width;
@@ -52,7 +49,7 @@ namespace HTTPconsole
 			titleLabel.TextAlign = ContentAlignment.MiddleCenter;
 			titleLabel.Parent = this;
 
-			TextBox consoleBox = new TextBox();
+			consoleBox = new TextBox();
 			consoleBox.BackColor = Color.FromArgb(0x5f, 0x5f, 0x5f);
 			consoleBox.ForeColor = Color.FromArgb(0x73, 0xad, 0x21);
 			consoleBox.Multiline = true;
@@ -87,20 +84,18 @@ namespace HTTPconsole
 			inputButton.Parent = this;
 
 			StatusBar sb = new StatusBar();
-			sb.Text = Environment.OSVersion.VersionString;
+			sb.Text = "HTTP server running on port 49900, Operating system: " + Environment.OSVersion.VersionString;
 			sb.Parent = this;
 
 			pt = new ProgramThread(_command, _args);
 			Thread program = new Thread(new ThreadStart(pt.ThreadRun));
+			program.IsBackground = true;
 			program.Start();
 
 			HttpThread ht = new HttpThread(49900, pt);
 			Thread http = new Thread(new ThreadStart(ht.ThreadRun));
+			http.IsBackground = true;
 			http.Start();
-
-			UIThread uit = new UIThread(pt, consoleBox, sb);
-			Thread ui = new Thread(new ThreadStart(uit.ThreadRun));
-			ui.Start();
 		}
 
 		void InputButton_Click (object sender, EventArgs e)
@@ -113,6 +108,23 @@ namespace HTTPconsole
 		{
 			_command = command;
 			_args = args;
+		}
+
+
+		delegate void ConsoleBoxAppendTextDelegate(string text);
+
+		public void ConsoleBoxAppendText(string text)
+		{
+			if(consoleBox.InvokeRequired)
+			{
+				consoleBox.Invoke(new ConsoleBoxAppendTextDelegate(this.ConsoleBoxAppendText), new object[] { text });
+			}
+			else
+			{
+				consoleBox.Text = consoleBox.Text += text;
+				consoleBox.SelectionStart = consoleBox.Text.Length;
+				consoleBox.ScrollToCaret();
+			}
 		}
 	}
 }

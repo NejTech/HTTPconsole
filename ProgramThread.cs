@@ -10,7 +10,7 @@ namespace HTTPconsole
 	public class ProgramThread
 	{
 		public volatile List<string> stdoutBuffer;
-		public volatile List<string> stderrBuffer;
+		public volatile List<string> stderrBuffer; // unused
 
 		public volatile Queue<string> stdinBuffer;
 
@@ -31,8 +31,8 @@ namespace HTTPconsole
 
 			Process p = new Process();
 			p.StartInfo = psi;
-			p.OutputDataReceived += (sender, e) => stdoutBuffer.Add(e.Data);
-			p.ErrorDataReceived += (sender, e) => stdoutBuffer.Add(e.Data);
+			p.OutputDataReceived += (sender, e) => SaveOutput(e.Data);
+			p.ErrorDataReceived += (sender, e) => SaveOutput("(ERROR): " + e.Data);
 
 			p.Start();
 			p.BeginOutputReadLine();
@@ -55,6 +55,12 @@ namespace HTTPconsole
 			stdoutBuffer.Add("--- PRESS CTRL-C TO STOP HTTP SERVER ---");
 		}
 
+		private void SaveOutput(string output)
+		{
+			stdoutBuffer.Add(output);
+			UIForm.Instance.ConsoleBoxAppendText(output + "\r\n");
+		}
+
 		public ProgramThread(string filename, string args)
 		{
 			stdoutBuffer = new List<string>();
@@ -63,7 +69,6 @@ namespace HTTPconsole
 
 			_filename = filename;
 			_args = args;
-
 		}
 	}
 }
