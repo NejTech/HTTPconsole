@@ -25,6 +25,7 @@ namespace HTTPconsole
 			psi.Arguments = _args;
 
 			psi.UseShellExecute = false;
+            psi.CreateNoWindow = true;
 			psi.RedirectStandardOutput = true;
 			psi.RedirectStandardError = true;
 			psi.RedirectStandardInput = true;
@@ -32,7 +33,7 @@ namespace HTTPconsole
 			Process p = new Process();
 			p.StartInfo = psi;
 			p.OutputDataReceived += (sender, e) => SaveOutput(e.Data);
-			p.ErrorDataReceived += (sender, e) => SaveOutput("(ERROR): " + e.Data);
+			p.ErrorDataReceived += (sender, e) => SaveOutput("(stderr): " + e.Data);
 
 			p.Start();
 			p.BeginOutputReadLine();
@@ -44,15 +45,15 @@ namespace HTTPconsole
 				{
 					if (stdinBuffer.Count != 0)
 					{
-						stdoutBuffer.Add("(INPUT): " + stdinBuffer.Peek());
+						SaveOutput("(stdin): " + stdinBuffer.Peek());
 						p.StandardInput.WriteLine(stdinBuffer.Dequeue());
 					}
 				}
 			}
 
 			p.WaitForExit();
-			stdoutBuffer.Add("----- PROGRAM EXITED WITH CODE: " + p.ExitCode.ToString() + " ------");
-			stdoutBuffer.Add("--- PRESS CTRL-C TO STOP HTTP SERVER ---");
+			SaveOutput("--- PROGRAM EXITED WITH CODE: " + p.ExitCode.ToString() + " ---");
+			SaveOutput("--- CLOSE HTTPCONSOLE WINDOW TO STOP HTTP SERVER ---");
 		}
 
 		private void SaveOutput(string output)

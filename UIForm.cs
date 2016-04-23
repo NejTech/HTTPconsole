@@ -56,34 +56,36 @@ namespace HTTPconsole
 			consoleBox.BackColor = Color.FromArgb(0x5f, 0x5f, 0x5f);
 			consoleBox.ForeColor = Color.FromArgb(0x73, 0xad, 0x21);
 			consoleBox.Multiline = true;
-			consoleBox.ReadOnly = true;
-			consoleBox.Font = new Font("Monaco", 11.0f);
+			//consoleBox.ReadOnly = true;
+			consoleBox.Font = new Font(FontFamily.GenericMonospace, 11.0f);
 			consoleBox.Width = 728;
 			consoleBox.Height = 408;
 			consoleBox.Location = new Point(32, 70);
+            consoleBox.BorderStyle = BorderStyle.None;
 			consoleBox.Parent = this;
 
 			Label inputBoxLabel = new Label();
 			inputBoxLabel.Text = "Input:";
 			inputBoxLabel.Width = 40;
 			inputBoxLabel.Height = 20;
-			inputBoxLabel.Location = new Point(33,495);
+			inputBoxLabel.Location = new Point(33,491);
 			inputBoxLabel.Font = new Font(inputBoxLabel.Font.FontFamily, 11.0f);
 			inputBoxLabel.Parent = this;
 
 			inputBox = new TextBox();
 			inputBox.Width = 600;
-			inputBox.Font = new Font("Monaco", 10.0f);
+			inputBox.Font = new Font(FontFamily.GenericMonospace, 10.0f);
 			inputBox.Location = new Point(80, 490);
 			inputBox.Parent = this;
 
 			Button inputButton = new Button();
 			inputButton.Text = "Send";
-			inputButton.Height = inputBox.Height;
+			inputButton.Height = inputBox.Height + 2;
 			inputButton.Width = 70;
-			inputButton.Location = new Point(688, 490);
+			inputButton.Location = new Point(688, 489);
 			inputButton.Font = new Font(inputButton.Font.FontFamily, 11.0f);
 			inputButton.Click += InputButton_Click;
+            AcceptButton = inputButton;
 			inputButton.Parent = this;
 
 			StatusBar sb = new StatusBar();

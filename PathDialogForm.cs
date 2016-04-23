@@ -14,7 +14,7 @@ namespace HTTPconsole
 		public PathDialogForm()
 		{
 			Text = "HTTPconsole";
-			Size = new Size(330, 185);
+			Size = new Size(340, 200);
 			SizeGripStyle = SizeGripStyle.Hide;
 			FormBorderStyle = FormBorderStyle.Fixed3D;
 			MaximizeBox = false;
@@ -55,15 +55,19 @@ namespace HTTPconsole
 			Button okButton = new Button();
 			okButton.Text = "OK";
 			okButton.Font = new Font("Segoe UI", 11.0f);
-			okButton.Location = new Point(235, 118);
+            okButton.Height = 30;
+            okButton.Location = new Point(235, 118);
 			okButton.Click += OkButton_Click;
+            AcceptButton = okButton;
 			okButton.Parent = this;
 
 			Button cancelButton = new Button();
 			cancelButton.Text = "Cancel";
 			cancelButton.Font = new Font("Segoe UI", 11.0f);
+            cancelButton.Height = 30;
 			cancelButton.Location = new Point(145, 118);
 			cancelButton.Click += CancelButton_Click;
+            CancelButton = cancelButton;
 			cancelButton.Parent = this;
 		}
 
