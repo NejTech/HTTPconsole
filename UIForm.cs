@@ -37,6 +37,9 @@ namespace HTTPconsole
 
 			Text = _command + " " + _args;
 			Size = new Size(800, 600);
+			SizeGripStyle = SizeGripStyle.Hide;
+			FormBorderStyle = FormBorderStyle.Fixed3D;
+			MaximizeBox = false;
 
 			Label titleLabel = new Label();
 			titleLabel.Text = "HTTPconsole";
@@ -86,6 +89,7 @@ namespace HTTPconsole
 			StatusBar sb = new StatusBar();
 			sb.Text = "HTTP server running on port 49900, Operating system: " + Environment.OSVersion.VersionString;
 			sb.Parent = this;
+			sb.SizingGrip = false;
 
 			pt = new ProgramThread(_command, _args);
 			Thread program = new Thread(new ThreadStart(pt.ThreadRun));

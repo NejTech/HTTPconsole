@@ -15,6 +15,9 @@ namespace HTTPconsole
 		{
 			Text = "HTTPconsole";
 			Size = new Size(330, 185);
+			SizeGripStyle = SizeGripStyle.Hide;
+			FormBorderStyle = FormBorderStyle.Fixed3D;
+			MaximizeBox = false;
 
 			owner = UIForm.Instance;
 
