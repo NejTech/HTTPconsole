@@ -56,7 +56,7 @@ namespace HTTPconsole
 			consoleBox.BackColor = Color.FromArgb(0x5f, 0x5f, 0x5f);
 			consoleBox.ForeColor = Color.FromArgb(0x73, 0xad, 0x21);
 			consoleBox.Multiline = true;
-			//consoleBox.ReadOnly = true;
+			consoleBox.ReadOnly = true;
 			consoleBox.Font = new Font(FontFamily.GenericMonospace, 11.0f);
 			consoleBox.Width = 728;
 			consoleBox.Height = 408;
